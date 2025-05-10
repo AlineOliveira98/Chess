@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardManager : MonoBehaviour
+public class BoardBuilding : MonoBehaviour
 {
-    public static BoardManager Instance;
+    public static BoardBuilding Instance;
     private const int BoardSize = 8;
 
     [SerializeField] private float tileSize = 1f;
@@ -18,8 +18,6 @@ public class BoardManager : MonoBehaviour
 
     public Tile[,] board = new Tile[BoardSize,BoardSize];
     public Tile[,] Board => board;
-
-    public static Action OnBoardReseted;
 
     void Awake()
     {
@@ -85,6 +83,9 @@ public class BoardManager : MonoBehaviour
 
             board[i, 1].SetPiece(whitePawn);
             board[i, 6].SetPiece(blackPawn);
+
+            board[i, 1].SetInitialPiece(whitePawn);
+            board[i, 6].SetInitialPiece(blackPawn);
         }
 
         PieceType[] pieceTypesOrder = new PieceType[]
@@ -103,9 +104,11 @@ public class BoardManager : MonoBehaviour
         {
             var whitePiece = GeneratePiece(GetPiecePrefab(pieceTypesOrder[i], PieceColor.White));
             board[i, 0].SetPiece(whitePiece);
+            board[i, 0].SetInitialPiece(whitePiece);
 
             var blackPiece = GeneratePiece(GetPiecePrefab(pieceTypesOrder[i], PieceColor.Black));
             board[i, 7].SetPiece(blackPiece);
+            board[i, 7].SetInitialPiece(blackPiece);
         }
     }
 
@@ -116,13 +119,15 @@ public class BoardManager : MonoBehaviour
         return newPiece;
     }
 
-    private void ResetBoard()
-    {
-
-    }
-
     public Tile GetTile(Vector2Int coordinate)
     {
+        if(!IsInsideBoard(coordinate.x, coordinate.y)) return null;
+
         return board[coordinate.x, coordinate.y];
+    }
+
+    private bool IsInsideBoard(int x, int y)
+    {
+        return x >= 0 && x < BoardSize && y >= 0 && y < BoardSize;
     }
 }
