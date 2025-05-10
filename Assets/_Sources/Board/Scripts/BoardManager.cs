@@ -9,14 +9,15 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField] private float tileSize = 1f;
     [SerializeField] private Tile tilePrefab;
-    [SerializeField] private Transform tilesContent;
     [SerializeField] private Piece[] piecesPrefab;
 
     private float tileOffset => (BoardSize - 1) / 2f;
     private Transform piecesContent;
+    private Transform tilesContent;
     private Dictionary<string, Piece> piecesDict = new();
 
-    public Tile[,] Board = new Tile[BoardSize,BoardSize];
+    public Tile[,] board = new Tile[BoardSize,BoardSize];
+    public Tile[,] Board => board;
 
     public static Action OnBoardReseted;
 
@@ -53,6 +54,9 @@ public class BoardManager : MonoBehaviour
     
     private void DrawBoard()
     {
+        tilesContent = new GameObject("Tiles").transform;
+        tilesContent.transform.SetParent(transform);
+        
         for(int x = 0; x < BoardSize; x++)
         {
             for(int y = 0; y < BoardSize; y++)
@@ -64,7 +68,7 @@ public class BoardManager : MonoBehaviour
                 tile.transform.position = pos;
                 tile.Setup(coord);
 
-                Board[x, y] = tile;
+                board[x, y] = tile;
             }
         }
     }
@@ -79,8 +83,8 @@ public class BoardManager : MonoBehaviour
             var whitePawn = GeneratePiece(GetPiecePrefab(PieceType.Pawn, PieceColor.White));
             var blackPawn = GeneratePiece(GetPiecePrefab(PieceType.Pawn, PieceColor.Black));
 
-            Board[i, 1].SetPiece(whitePawn);
-            Board[i, 6].SetPiece(blackPawn);
+            board[i, 1].SetPiece(whitePawn);
+            board[i, 6].SetPiece(blackPawn);
         }
 
         PieceType[] pieceTypesOrder = new PieceType[]
@@ -98,10 +102,10 @@ public class BoardManager : MonoBehaviour
         for (int i = 0; i < 8; i++)
         {
             var whitePiece = GeneratePiece(GetPiecePrefab(pieceTypesOrder[i], PieceColor.White));
-            Board[i, 0].SetPiece(whitePiece);
+            board[i, 0].SetPiece(whitePiece);
 
             var blackPiece = GeneratePiece(GetPiecePrefab(pieceTypesOrder[i], PieceColor.Black));
-            Board[i, 7].SetPiece(blackPiece);
+            board[i, 7].SetPiece(blackPiece);
         }
     }
 
@@ -119,6 +123,6 @@ public class BoardManager : MonoBehaviour
 
     public Tile GetTile(Vector2Int coordinate)
     {
-        return Board[coordinate.x, coordinate.y];
+        return board[coordinate.x, coordinate.y];
     }
 }
