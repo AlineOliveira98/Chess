@@ -8034,7 +8034,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileSize: 1
   tilePrefab: {fileID: -2808450777216332337, guid: ed390ca9cce4afb47a91e07067174739, type: 3}
-  tilesContent: {fileID: 1892764337}
+  tilesContent: {fileID: 650903527}
   boardTiles:
   - {fileID: 318898375}
   - {fileID: 1051922122}

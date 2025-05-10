@@ -1,15 +1,12 @@
 using UnityEngine;
 
-[SelectionBaseAttribute]
 public class Tile : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer background;
-    [SerializeField] private Piece initialPiece;
 
-    private Piece originalPiece;
     private Piece currentPiece;
-    private Vector2Int coordinates;
-    private BoardManager boardManager;
+    
+    public Vector2Int Coord {get; private set; }
 
     public Vector2 Position => transform.position;
     public bool IsEmpty => currentPiece == null;
@@ -29,23 +26,13 @@ public class Tile : MonoBehaviour
         
     }
 
-    public void Setup(BoardManager boardManager, Vector2Int coordinates, Vector3 pos, bool isBlackTile)
+    public void Setup(Vector2Int coord)
     {
-        this.boardManager = boardManager;
-        this.coordinates = coordinates;
-        gameObject.name = $"Tile {coordinates.x}-{coordinates.y}";
-        transform.position = pos;
+        Coord = coord;
+        gameObject.name = $"Tile {coord.x}-{coord.y}";
 
-        background.color = isBlackTile ? Color.black : Color.white;
-    }
-
-    public void InitPiece()
-    {
-        if(initialPiece == null) return;
-
-        var piece = BoardManager.Instance.GeneratePiece(initialPiece);
-        originalPiece = piece;
-        SetPiece(piece);
+        var tileBlackColor = (coord.x + coord.y) % 2 == 0;
+        background.color = tileBlackColor ? Color.black : Color.white;
     }
 
     public void SetPiece(Piece piece)
@@ -56,8 +43,6 @@ public class Tile : MonoBehaviour
 
     private void Reset()
     {
-        if(originalPiece == null) return;
-
-        SetPiece(originalPiece); 
+         
     }
 }

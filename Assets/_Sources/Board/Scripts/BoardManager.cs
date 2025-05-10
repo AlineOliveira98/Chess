@@ -10,10 +10,11 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private float tileSize = 1f;
     [SerializeField] private Tile tilePrefab;
     [SerializeField] private Transform tilesContent;
-    [SerializeField] private Tile[] boardTiles;
+    [SerializeField] private Piece[] piecesPrefab;
 
     private float tileOffset => (BoardSize - 1) / 2f;
     private Transform piecesContent;
+    private Dictionary<string, Piece> piecesDict = new();
 
     public Tile[,] Board = new Tile[BoardSize,BoardSize];
 
@@ -29,46 +30,78 @@ public class BoardManager : MonoBehaviour
 
     private void Start()
     {
-        GetBoard();
-        SetupPieces();
+        InitPiecesDict();
+        DrawBoard();
+        DrawPieces();
+    }
+
+    private void InitPiecesDict()
+    {
+        piecesDict.Clear();
+
+        for (int i = 0; i < piecesPrefab.Length; i++)
+        {
+            var key = $"{piecesPrefab[i].Type} {piecesPrefab[i].Color}";
+            piecesDict.Add(key, piecesPrefab[i]);
+        }
+    }
+
+    private Piece GetPiecePrefab(PieceType type, PieceColor color)
+    {
+        return piecesDict[$"{type} {color}"];
     }
     
-    [ContextMenu("Create Board")]
-    private void CreateBoard()
+    private void DrawBoard()
     {
         for(int x = 0; x < BoardSize; x++)
         {
             for(int y = 0; y < BoardSize; y++)
             {
+                var coord = new Vector2Int(x,y);
+                var pos = new Vector3((x - tileOffset) * tileSize, (y - tileOffset) * tileSize);
                 var tile = Instantiate(tilePrefab, tilesContent); 
 
-                var pos = new Vector3((x - tileOffset) * tileSize, (y - tileOffset) * tileSize);
-                var isBlackTile = (x + y) % 2 == 0;
+                tile.transform.position = pos;
+                tile.Setup(coord);
 
-                tile.Setup(this, new Vector2Int(x,y), pos, isBlackTile);
+                Board[x, y] = tile;
             }
         }
     }
 
-    private void GetBoard()
-    {
-        for (int i = 0; i < boardTiles.Length; i++)
-        {
-            int x = i / BoardSize;
-            int y = i % BoardSize;
-
-            Board[x, y] = boardTiles[i];            
-        }
-    }
-
-    private void SetupPieces()
+    private void DrawPieces()
     {
         piecesContent = new GameObject("Pieces").transform;
         piecesContent.transform.SetParent(transform);
 
-        foreach (var tile in Board)
+        for (int i = 0; i < 8; i++)
         {
-            tile.InitPiece();
+            var whitePawn = GeneratePiece(GetPiecePrefab(PieceType.Pawn, PieceColor.White));
+            var blackPawn = GeneratePiece(GetPiecePrefab(PieceType.Pawn, PieceColor.Black));
+
+            Board[i, 1].SetPiece(whitePawn);
+            Board[i, 6].SetPiece(blackPawn);
+        }
+
+        PieceType[] pieceTypesOrder = new PieceType[]
+        {
+            PieceType.Rook,
+            PieceType.Knight,
+            PieceType.Bishop,
+            PieceType.Queen,
+            PieceType.King,
+            PieceType.Bishop,
+            PieceType.Knight,
+            PieceType.Rook
+        };
+
+        for (int i = 0; i < 8; i++)
+        {
+            var whitePiece = GeneratePiece(GetPiecePrefab(pieceTypesOrder[i], PieceColor.White));
+            Board[i, 0].SetPiece(whitePiece);
+
+            var blackPiece = GeneratePiece(GetPiecePrefab(pieceTypesOrder[i], PieceColor.Black));
+            Board[i, 7].SetPiece(blackPiece);
         }
     }
 
