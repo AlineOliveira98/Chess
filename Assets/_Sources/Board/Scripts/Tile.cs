@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class Tile : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private SpriteRenderer background;
+    [SerializeField] private GameObject highlight;
 
     private Piece initialPiece;
     private Piece currentPiece;
@@ -35,7 +36,9 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         gameObject.name = $"Tile {coord.x}-{coord.y}";
 
         var tileBlackColor = (coord.x + coord.y) % 2 == 0;
-        background.color = tileBlackColor ? Color.black : Color.white;
+
+        var color = tileBlackColor ? Color.black : Color.white;
+        background.color = color;
     }
 
     public void SetInitialPiece(Piece piece)
@@ -49,15 +52,9 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         currentPiece.SetTile(this);
     }
 
-    public void SetNormalColor()
+    public void SetHighLight(bool isHighlighted = false)
     {
-        var tileBlackColor = (Coord.x + Coord.y) % 2 == 0;
-        background.color = tileBlackColor ? Color.black : Color.white;
-    }
-
-    public void Highlight()
-    {
-        background.color = Color.yellow;
+        highlight.SetActive(isHighlighted);
     }
 
     public void CapturePiece()
