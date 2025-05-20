@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 public class BoardController : MonoBehaviour
@@ -44,14 +45,15 @@ public class BoardController : MonoBehaviour
         HailightTiles(moves);
     }
 
-    public void TryCapturePiece(Piece piece)
+    public bool TryCapturePiece(Piece piece)
     {
-        if(!highlightedTiles.Contains(piece.Coordinate)) return;
+        if (!highlightedTiles.Contains(piece.Coordinate)) return false;
 
         var tile = BoardBuilding.Instance.GetTile(piece.Coordinate);
         tile.CapturePiece();
 
         MovePiece(tile);
+        return true;
     }
 
     private void ResetBoard()

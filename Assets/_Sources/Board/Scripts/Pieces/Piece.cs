@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -27,7 +28,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 
     public void SetPosition(Vector2 pos)
     {
-        transform.position = pos;
+        transform.DOMove(pos, 0.2f);
     }
 
     public void PieceMovement()
@@ -61,10 +62,10 @@ public class Piece : MonoBehaviour, IPointerClickHandler
         return true;
     }
 
-    public bool IsInsideBoard()
+    public bool IsInsideBoard(Vector2Int coord)
     {
-        if (Coordinate.x < 0 || Coordinate.x > 7) return false;
-        if (Coordinate.y < 0 || Coordinate.y > 7) return false;
+        if (coord.x < 0 || coord.x > 7) return false;
+        if (coord.y < 0 || coord.y > 7) return false;
 
         return true;
     }

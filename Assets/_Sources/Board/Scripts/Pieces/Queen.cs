@@ -1,16 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Queen : Piece
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override List<Vector2Int> GetPossibleMovements()
     {
-        
-    }
+        var possibleMoves = new List<Vector2Int>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return possibleMoves;
     }
 }

@@ -21,7 +21,7 @@ public class Rook : Piece
             {
                 pos += dir;
 
-                if (!IsInsideBoard()) break;
+                if (!IsInsideBoard(pos)) break;
 
                 if (!TileIsEmpty(pos))
                 {
