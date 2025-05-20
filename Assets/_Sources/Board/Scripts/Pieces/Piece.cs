@@ -14,6 +14,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public PieceType Type => type;
     public PieceColor Color => color;
     public Vector2Int Coordinate => currentTile.Coord;
+    public Tile CurrentTile => currentTile;
     protected int Direction => color == PieceColor.White ? 1 : -1;
 
     public static Action<Piece, List<Vector2Int>> OnPieceSelected;
@@ -60,9 +61,17 @@ public class Piece : MonoBehaviour, IPointerClickHandler
         return true;
     }
 
+    public bool IsInsideBoard()
+    {
+        if (Coordinate.x < 0 || Coordinate.x > 7) return false;
+        if (Coordinate.y < 0 || Coordinate.y > 7) return false;
+
+        return true;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(GameManager.Instance.PlayersColor == color)
+        if (GameManager.Instance.PlayersColor == color)
             SelectPiece();
         else
             TryCapturePiece();

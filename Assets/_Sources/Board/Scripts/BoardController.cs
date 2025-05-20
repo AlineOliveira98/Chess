@@ -64,6 +64,7 @@ public class BoardController : MonoBehaviour
         if (selectedPiece == null) return;
         if (!highlightedTiles.Contains(tileSelected.Coord)) return;
 
+        selectedPiece.CurrentTile.RemovePiece();
         selectedPiece.PieceMovement();
         tileSelected.SetPiece(selectedPiece);
 

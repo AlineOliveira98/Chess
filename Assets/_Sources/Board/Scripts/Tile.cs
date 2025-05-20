@@ -62,6 +62,12 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         if(currentPiece == null) return;
 
         currentPiece.gameObject.SetActive(false);
+        RemovePiece();
+    }
+
+    public void RemovePiece()
+    {
+        currentPiece = null;
     }
 
     private void Reset()
