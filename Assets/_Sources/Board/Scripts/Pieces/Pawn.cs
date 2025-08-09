@@ -5,22 +5,22 @@ using UnityEngine.EventSystems;
 
 public class Pawn : Piece
 {
-    public override List<Vector2Int> GetPossibleMovements()
+    public override void UpdatePossibleMovements()
     {
-        var possibleMoves = new List<Vector2Int>();
+        possibleMovements.Clear();
 
         var fowardMove = new Vector2Int(Coordinate.x, Coordinate.y + Direction);
 
         if(TileIsEmpty(fowardMove))
         {
-            possibleMoves.Add(fowardMove);
+            possibleMovements.Add(fowardMove);
 
             if(!HasMoved)
             {
                 var doubleFowardMove = new Vector2Int(Coordinate.x, Coordinate.y + Direction * 2);
 
                 if(TileIsEmpty(doubleFowardMove))
-                    possibleMoves.Add(doubleFowardMove);
+                    possibleMovements.Add(doubleFowardMove);
             }
         }
 
@@ -34,10 +34,8 @@ public class Pawn : Piece
         {
             if(TileHasOpponentPiece(coord))
             {
-                possibleMoves.Add(coord);
+                possibleMovements.Add(coord);
             }
         }
-
-        return possibleMoves;
     }
 }

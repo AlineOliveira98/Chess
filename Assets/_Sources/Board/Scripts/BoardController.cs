@@ -56,7 +56,7 @@ public class BoardController : MonoBehaviour
         return true;
     }
 
-    private void ResetBoard()
+    public void ResetBoard()
     {
         OnBoardReseted?.Invoke();
     }
@@ -67,11 +67,13 @@ public class BoardController : MonoBehaviour
         if (!highlightedTiles.Contains(tileSelected.Coord)) return;
 
         selectedPiece.CurrentTile.RemovePiece();
-        selectedPiece.PieceMovement();
         tileSelected.SetPiece(selectedPiece);
+        selectedPiece.PieceMovement();
 
         selectedPiece = null;
         ResetNormalColorTiles();
+
+        BoardBuilding.Instance.UpdatePiecesMovements();
     }
 
     private void ResetNormalColorTiles()
@@ -86,7 +88,7 @@ public class BoardController : MonoBehaviour
 
     public void HailightTiles(List<Vector2Int> coords)
     {
-        highlightedTiles = coords;
+        highlightedTiles = new List<Vector2Int>(coords);
 
         foreach (var coord in coords)
         {

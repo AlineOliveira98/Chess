@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Knight : Piece
 {
-    public override List<Vector2Int> GetPossibleMovements()
+    public override void UpdatePossibleMovements()
     {
-        var possibleMoves = new List<Vector2Int>();
+        possibleMovements.Clear();
 
         Vector2Int[] directions = {
             new Vector2Int(2, 1),
@@ -25,9 +25,7 @@ public class Knight : Piece
             if (!IsInsideBoard(pos)) continue;
 
             if (TileIsEmpty(pos) || TileHasOpponentPiece(pos))
-                possibleMoves.Add(pos);
+                possibleMovements.Add(pos);
         }
-
-        return possibleMoves;
     }
 }

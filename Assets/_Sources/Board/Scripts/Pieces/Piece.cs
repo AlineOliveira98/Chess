@@ -11,12 +11,14 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     
     private Tile currentTile;
     protected bool HasMoved;
+    protected int Direction => color == PieceColor.White ? 1 : -1;
+    [SerializeField] protected List<Vector2Int> possibleMovements = new();
 
     public PieceType Type => type;
     public PieceColor Color => color;
     public Vector2Int Coordinate => currentTile.Coord;
     public Tile CurrentTile => currentTile;
-    protected int Direction => color == PieceColor.White ? 1 : -1;
+    public List<Vector2Int> PossibleMovements => possibleMovements;
 
     public static Action<Piece, List<Vector2Int>> OnPieceSelected;
 
@@ -34,19 +36,21 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public void PieceMovement()
     {
         HasMoved = true;
+        UpdatePossibleMovements();
+        GameManager.Instance.ChangeTurn();
     }
 
-    public virtual List<Vector2Int> GetPossibleMovements()
+    public virtual void UpdatePossibleMovements()
     {
-        return null;
+        
     }
 
     protected bool TileIsEmpty(Vector2Int coord)
     {
         var tile = BoardBuilding.Instance.GetTile(coord);
 
-        if(tile == null) return false;
-        if(!tile.IsEmpty) return false;
+        if (tile == null) return false;
+        if (!tile.IsEmpty) return false;
 
         return true;
     }
@@ -85,8 +89,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 
     private void SelectPiece()
     {
-        var moves = GetPossibleMovements();
-        OnPieceSelected?.Invoke(this, moves);
+        OnPieceSelected?.Invoke(this, possibleMovements);
     }
 }
 

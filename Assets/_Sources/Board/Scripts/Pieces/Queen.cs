@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Queen : Piece
 {
-    public override List<Vector2Int> GetPossibleMovements()
+    public override void UpdatePossibleMovements()
     {
-        var possibleMoves = new List<Vector2Int>();
+        possibleMovements.Clear();
 
         Vector2Int[] directions = {
             Vector2Int.right,
@@ -30,15 +30,13 @@ public class Queen : Piece
                 if (!TileIsEmpty(pos))
                 {
                     if (TileHasOpponentPiece(pos))
-                        possibleMoves.Add(pos);
+                        possibleMovements.Add(pos);
 
                     break;
                 }
 
-                possibleMoves.Add(pos);
+                possibleMovements.Add(pos);
             }
         }
-
-        return possibleMoves;
     }
 }

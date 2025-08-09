@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Bishop : Piece
 {
-    public override List<Vector2Int> GetPossibleMovements()
+    public override void UpdatePossibleMovements()
     {
-        var possibleMoves = new List<Vector2Int>();
+        possibleMovements.Clear();
 
         Vector2Int[] directions = {
             new Vector2Int(1, 1),
@@ -26,15 +26,13 @@ public class Bishop : Piece
                 if (!TileIsEmpty(pos))
                 {
                     if (TileHasOpponentPiece(pos))
-                        possibleMoves.Add(pos);
+                        possibleMovements.Add(pos);
 
                     break;
                 }
 
-                possibleMoves.Add(pos);
+                possibleMovements.Add(pos);
             }
         }
-
-        return possibleMoves;
     }
 }

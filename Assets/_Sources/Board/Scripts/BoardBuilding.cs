@@ -19,6 +19,8 @@ public class BoardBuilding : MonoBehaviour
     public Tile[,] board = new Tile[BoardSize,BoardSize];
     public Tile[,] Board => board;
 
+    public List<Piece> PiecesOnBoard { get; private set; }
+
     void Awake()
     {
         if(Instance == null)
@@ -110,6 +112,36 @@ public class BoardBuilding : MonoBehaviour
             board[i, 7].SetPiece(blackPiece);
             board[i, 7].SetInitialPiece(blackPiece);
         }
+
+        UpdatePiecesMovements();
+    }
+
+    public void UpdatePiecesMovements()
+    {
+        foreach (var tile in board)
+        {
+            if (tile.IsEmpty) continue;
+            
+            tile.CurrentPiece.UpdatePossibleMovements();
+        }
+    }
+
+    public bool CheckmatePosition(Vector2Int pos, PieceColor pieceColor)
+    {
+        bool checkmatePos = false;
+
+        foreach (var tile in board)
+        {
+            if (tile.IsEmpty) continue;
+            if (tile.CurrentPiece.Color == pieceColor) continue;
+
+            checkmatePos = tile.CurrentPiece.PossibleMovements.Contains(pos);
+
+            if (checkmatePos)
+                break;
+        }
+
+        return checkmatePos;
     }
 
     public Piece GeneratePiece(Piece piecePrefab)

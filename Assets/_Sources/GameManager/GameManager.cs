@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,11 +9,20 @@ public class GameManager : MonoBehaviour
 
     public PieceColor PlayersColor => playersColor;
 
+    public static Action<PieceColor> OnTurnChanged;
+
     void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
             Instance = this;
         else
             Destroy(this.gameObject);
+    }
+
+    public void ChangeTurn()
+    {
+        playersColor = playersColor == PieceColor.White ? PieceColor.Black : PieceColor.White;
+
+        OnTurnChanged?.Invoke(playersColor);
     }
 }
